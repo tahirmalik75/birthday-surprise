@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#8b5cf6;--purple-l:#a78bfa;--purple-d:#6d28d9;
+  --pink:#ec4899;--pink-l:#f472b6;
+  --gold:#fbbf24;
+  --bg:#06030f;--bg2:#0d0820;--bg3:#130c2a;
+  --glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.09);
+  --glass-p:rgba(139,92,246,0.1);--glass-pb:rgba(139,92,246,0.22);
+  --text:#f5f0ff;--muted:#9d87c5;--subtle:#4a3870;
+}
+html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);overflow-x:hidden}
+#app{min-height:100vh;position:relative}
+.serif{font-family:'Cormorant Garamond',serif}
+.bg-scene{
+  position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 15% 10%,#1a0640 0%,transparent 55%),
+             radial-gradient(ellipse 60% 50% at 85% 85%,#1f0535 0%,transparent 55%),
+             var(--bg);
+}
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--dl) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:var(--op)}50%{opacity:var(--op2);transform:scale(1.5)}}
+.screen{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px}
+.screen-in{animation:screenIn .55s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes screenIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.glass{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-border);border-radius:20px}
+.glass-p{background:var(--glass-p);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-pb);border-radius:20px}
+.glass-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.07);border-radius:24px}
+.neon{text-shadow:0 0 20px rgba(167,139,250,.9),0 0 40px rgba(167,139,250,.4)}
+.neon-box{box-shadow:0 0 24px rgba(139,92,246,.35),inset 0 0 24px rgba(139,92,246,.04)}
+.neon-pink{text-shadow:0 0 18px rgba(236,72,153,.8),0 0 36px rgba(236,72,153,.35)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,var(--purple-d),#a21caf);
+  color:#fff;border:none;border-radius:50px;padding:14px 30px;
+  font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;
+  cursor:pointer;letter-spacing:.3px;
+  box-shadow:0 4px 28px rgba(109,40,217,.55);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn:hover{transform:scale(1.05) translateY(-1px);box-shadow:0 8px 36px rgba(109,40,217,.75)}
+.btn:active{transform:scale(.98)}
+.btn-sm{padding:11px 22px;font-size:13px}
+.btn-ghost{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);box-shadow:none}
+.btn-ghost:hover{background:rgba(139,92,246,.22);box-shadow:0 4px 20px rgba(139,92,246,.3)}
+.title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;line-height:1.3;color:var(--text)}
+.subtitle{font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.body-text{font-size:14px;line-height:1.75;color:var(--muted)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes floatBalloon{0%{transform:translateY(0) rotate(-4deg)}33%{transform:translateY(-20px) rotate(4deg)}66%{transform:translateY(-9px) rotate(-2deg)}100%{transform:translateY(0) rotate(-4deg)}}
+@keyframes flicker{0%,100%{opacity:1;transform:scale(1,1)}30%{opacity:.9;transform:scale(.95,1.08)}70%{opacity:.95;transform:scale(1.05,.96)}}
+@keyframes popBurst{0%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.7}100%{transform:scale(0);opacity:0}}
+@keyframes particleOut{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--px),var(--py)) scale(0);opacity:0}}
+@keyframes confetti{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(var(--rot));opacity:0}}
+@keyframes countIn{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+@keyframes spinReveal{0%{transform:rotate(-200deg) scale(0);opacity:0}100%{transform:rotate(0) scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes envelopeUnfold{from{transform:perspective(700px) rotateX(-80deg);transform-origin:top;opacity:0}to{transform:perspective(700px) rotateX(0);transform-origin:top;opacity:1}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(139,92,246,.3),0 0 40px rgba(139,92,246,.1)}50%{box-shadow:0 0 40px rgba(139,92,246,.7),0 0 80px rgba(139,92,246,.3),0 0 120px rgba(139,92,246,.1)}}
+@keyframes zoomIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideCard{from{opacity:0;transform:translateX(40px) scale(.96)}to{opacity:1;transform:translateX(0) scale(1)}}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.55);animation:typing 1.3s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+.particle{position:absolute;width:7px;height:7px;border-radius:50%;pointer-events:none;animation:particleOut .85s ease-out forwards}
+.confetti-p{position:fixed;pointer-events:none;animation:confetti var(--dur) var(--dl) linear forwards}
+.stage-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);
+  border-radius:50px;padding:5px 14px;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--purple-l);
+  margin-bottom:14px;
+}
+.prog{display:flex;gap:6px;align-items:center}
+.prog-dot{height:6px;border-radius:3px;background:var(--subtle);transition:all .35s ease}
+.prog-dot.active{background:var(--purple-l);width:20px}
+.prog-dot.done{background:rgba(139,92,246,.4);width:10px}
+.prog-dot.future{width:6px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(139,92,246,.35);border-radius:2px}
+
+/* ── Memory photo card ── */
+.mem-photo-card {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #0e0826;
+  border: 1px solid rgba(139,92,246,.35);
+  box-shadow: 0 0 32px rgba(139,92,246,.25);
+  animation: slideCard .4s cubic-bezier(.34,1.2,.64,1) forwards;
+  flex-shrink: 0;
+}
+.mem-photo-card img {
+  width: 100%;
+  display: block;
+  /* cover the full card width, auto height preserves aspect ratio */
+  object-fit: cover;
+  max-height: 62vh;
+  border-radius: 22px 22px 0 0;
+}
+.mem-photo-caption {
+  padding: 12px 16px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid rgba(139,92,246,.15);
+}
+.mem-photo-caption .cap-emoji { font-size: 22px; flex-shrink:0; }
+.mem-photo-caption .cap-text  { flex:1; }
+.mem-photo-caption .cap-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; font-weight: 600; color: #e9d5ff;
+}
+.mem-photo-caption .cap-desc  { font-size: 12px; color: #9d87c5; margin-top:2px; line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="bg-scene"></div>
+<div class="stars" id="stars"></div>
+<div id="app"></div>
+
+<script>
+(()=>{
+  const c=document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s=document.createElement('div');
+    const sz=Math.random()*2+.5;
+    const op=(Math.random()*.4+.1).toFixed(2);
+    s.className='star';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${3+Math.random()*4}s;--dl:${Math.random()*5}s;--op:${op};--op2:${(+op+.3).toFixed(2)}`;
+    c.appendChild(s);
+  }
+})();
+
+let stage=0;
+const app=document.getElementById('app');
+function go(s){stage=s;render();}
+
+function launchConfetti(){
+  const colors=['#c084fc','#e879f9','#fbbf24','#34d399','#f472b6','#60a5fa','#fb923c','#a78bfa'];
+  for(let i=0;i<70;i++){
+    const el=document.createElement('div');
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    const sz=6+Math.random()*8;
+    el.className='confetti-p';
+    el.style.cssText=`left:${Math.random()*100}%;top:-10px;width:${sz}px;height:${sz}px;border-radius:${Math.random()>.5?'50%':'3px'};background:${c};--dur:${1.5+Math.random()*1.5}s;--dl:${Math.random()*1.2}s;--rot:${(Math.random()-.5)*720}deg`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),(3+Math.random()*1.5)*1000);
+  }
+}
+
+function burstParticles(container,color){
+  for(let i=0;i<16;i++){
+    const p=document.createElement('div');
+    const angle=Math.random()*Math.PI*2;
+    const dist=50+Math.random()*80;
+    p.className='particle';
+    p.style.cssText=`background:${color};--px:${Math.cos(angle)*dist}px;--py:${Math.sin(angle)*dist}px;left:50%;top:40%;`;
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),900);
+  }
+}
+
+function renderChat(){
+  const msgs=[
+    {from:'a',text:'hey!! are you actually free rn? 👀',delay:400},
+    {from:'b',text:'yes omg why whats happening 😭',delay:1300},
+    {from:'a',text:'okay so... someone very special has a birthday today',delay:2400},
+    {from:'b',text:'wait who?? 👁️👄👁️',delay:3300},
+    {from:'a',text:"a certain Princess who's turning 15 years old today 🎂✨",delay:4400},
+    {from:'b',text:'WAIT IS THIS ACTUALLY ABOUT ME 🥺💜',delay:5400},
+    {from:'a',text:'maybe i made something just for you... tap below to find out 🎁',delay:6600},
+  ];
+  const el=document.createElement('div');
+  el.id='chat-screen';
+  el.style.cssText='display:flex;flex-direction:column;height:100vh;position:relative;z-index:2';
+  el.innerHTML=`
+    <div style="padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(6,3,15,.7);backdrop-filter:blur(20px);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px;max-width:420px;margin:0 auto">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a21caf);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎂</div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#e9d5ff">Birthday Surprise</div>
+          <div style="font-size:11px;color:#34d399;display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;background:#34d399;border-radius:50%;display:inline-block"></span>online now</div>
+        </div>
+      </div>
+    </div>
+    <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px;max-width:460px;width:100%;margin:0 auto;align-self:center;align-items:stretch"></div>
+    <div id="chat-btn-wrap" style="padding:16px;max-width:460px;width:100%;margin:0 auto;align-self:center;display:none">
+      <button class="btn" style="width:100%;font-size:16px;padding:16px" onclick="go(1)">Open Your Surprise 🎁</button>
+    </div>
+  `;
+  app.appendChild(el);
+  const msgBox=el.querySelector('#chat-msgs');
+  const btnWrap=el.querySelector('#chat-btn-wrap');
+  let typingEl=null;
+  const showMsg=(i)=>{
+    if(i>=msgs.length){setTimeout(()=>{btnWrap.style.display='block';btnWrap.style.animation='fadeUp .5s ease forwards'},300);return;}
+    const m=msgs[i];const isA=m.from==='a';
+    setTimeout(()=>{if(typingEl)typingEl.remove();typingEl=document.createElement('div');typingEl.style.cssText=`display:flex;justify-content:${isA?'flex-start':'flex-end'}`;typingEl.innerHTML=`<div class="glass-p" style="padding:10px 14px;border-radius:${isA?'5px 18px 18px 18px':'18px 5px 18px 18px'};display:flex;gap:5px;align-items:center"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;msgBox.appendChild(typingEl);msgBox.scrollTop=msgBox.scrollHeight;},m.delay-280);
+    setTimeout(()=>{
+      if(typingEl){typingEl.remove();typingEl=null}
+      const wrap=document.createElement('div');wrap.style.cssText=`display:flex;justify-content:${isA?'flex-start':'flex-end'};animation:${isA?'slideInLeft':'slideInRight'} .4s ease forwards`;
+      const bubble=document.createElement('div');bubble.style.cssText=`max-width:78%;padding:10px 15px;border-radius:${isA?'5px 18px 18px 18px':'18px 5px 18px 18px'};font-size:14px;line-height:1.55;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);`;
+      if(isA){bubble.style.background='rgba(109,40,217,.18)';bubble.style.border='1px solid rgba(109,40,217,.3)';bubble.style.color='#f0e6ff';}
+      else{bubble.style.background='rgba(162,28,175,.2)';bubble.style.border='1px solid rgba(162,28,175,.35)';bubble.style.color='#fde8ff';}
+      bubble.textContent=m.text;wrap.appendChild(bubble);msgBox.appendChild(wrap);msgBox.scrollTop=msgBox.scrollHeight;showMsg(i+1);
+    },m.delay);
+  };
+  showMsg(0);
+}
+
+function renderCountdown(){
+  let count=3;const R=90,circ=2*Math.PI*R;
+  const el=document.createElement('div');el.className='screen screen-in';el.style.gap='0';
+  el.innerHTML=`<p class="subtitle" style="margin-bottom:28px;animation:fadeUp .6s ease forwards">Your surprise begins in...</p><div style="position:relative;width:220px;height:220px;margin:0 auto"><svg width="220" height="220" style="position:absolute;top:0;left:0"><defs><linearGradient id="cgrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="50%" stop-color="#a21caf"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><circle cx="110" cy="110" r="${R}" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="10"/><circle id="cd-ring" cx="110" cy="110" r="${R}" fill="none" stroke="url(#cgrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" transform="rotate(-90 110 110)" style="transition:stroke-dashoffset .75s ease;filter:drop-shadow(0 0 10px rgba(167,139,250,.8))"/></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><div id="cd-num" style="font-family:'Cormorant Garamond',serif;font-size:88px;font-weight:700;color:#d8b4fe;text-shadow:0 0 30px rgba(192,132,252,.9),0 0 60px rgba(192,132,252,.4);line-height:1"></div></div></div>`;
+  app.appendChild(el);
+  const ring=el.querySelector('#cd-ring'),num=el.querySelector('#cd-num');
+  let navigated=false;
+  const update=()=>{
+    if(navigated)return;
+    if(count<0){navigated=true;go(2);return;}
+    const prog=((3-count)/3)*circ;ring.style.strokeDashoffset=circ-prog;
+    num.style.animation='none';void num.offsetHeight;
+    if(count===0){num.textContent='✨';num.style.fontSize='60px';}else{num.textContent=count;num.style.fontSize='88px';}
+    num.style.animation='countIn .5s cubic-bezier(.34,1.56,.64,1) forwards';
+    count--;
+    if(count>=0)setTimeout(update,1000);else setTimeout(()=>{if(!navigated){navigated=true;go(2);}},900);
+  };
+  setTimeout(update,300);
+}
+
+function renderReveal(){
+  const el=document.createElement('div');el.className='screen screen-in';el.style.gap='0';
+  el.innerHTML=`<div style="font-size:96px;opacity:0;line-height:1.1;animation:spinReveal .8s cubic-bezier(.34,1.56,.64,1) .1s forwards">🐼</div><div style="opacity:0;animation:fadeUp .6s ease .7s forwards;text-align:center;margin-top:20px"><h1 class="title" style="font-size:30px">A <span style="color:#f472b6;font-style:italic">Princess</span> was born</h1><h1 class="title" style="font-size:30px;margin-top:4px">15 years ago today 🌸</h1></div><div style="opacity:0;animation:fadeUp .6s ease 1.4s forwards;text-align:center;margin-top:20px;max-width:300px"><p class="body-text" style="font-size:15px">And ever since that magical day, the world has been a little warmer, a little brighter, and infinitely more beautiful.</p></div><div style="opacity:0;animation:fadeUp .6s ease 2.1s forwards;margin-top:28px"><button class="btn" onclick="go(3)">Continue ✨</button></div>`;
+  app.appendChild(el);
+}
+
+function renderCake(){
+  let decorated=false,lit=false;
+  const el=document.createElement('div');el.className='screen screen-in';el.style.cssText+='gap:0;position:relative;overflow:hidden';
+  el.innerHTML=`<div style="text-align:center;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:0"><div class="stage-badge">Stage 4</div><h2 class="title" style="font-size:24px;margin-bottom:20px">🎂 Decorate the Cake</h2><div id="cake-wrap" style="position:relative;width:220px;height:210px;margin:0 auto 20px"><div id="flame" style="display:none;position:absolute;top:-26px;left:50%;transform:translateX(-50%);z-index:5;align-items:center;flex-direction:column"><div style="width:18px;height:26px;border-radius:60% 60% 40% 40%;background:linear-gradient(to top,#fbbf24,#fef9c3,#fff);filter:blur(1.5px);box-shadow:0 0 14px #fbbf24,0 0 30px rgba(251,191,36,.6);animation:flicker .35s ease-in-out infinite"></div><div style="width:2.5px;height:30px;background:linear-gradient(#fbbf24,#9ca3af);border-radius:2px"></div></div><svg id="cake-svg" width="220" height="200" viewBox="0 0 220 200"><ellipse cx="110" cy="188" rx="98" ry="12" fill="rgba(0,0,0,.4)"/><rect id="t1" x="8" y="112" width="204" height="70" rx="12" fill="#2d1a55"/><rect id="t2" x="34" y="74" width="152" height="44" rx="10" fill="#1e1040"/><rect id="t3" x="64" y="44" width="92" height="34" rx="8" fill="#140b2e"/><g id="decos" opacity="0" style="transition:opacity .8s"><ellipse cx="42" cy="112" rx="15" ry="10" fill="#f9a8d4"/><ellipse cx="82" cy="112" rx="13" ry="9" fill="#e879f9"/><ellipse cx="130" cy="112" rx="14" ry="9" fill="#f9a8d4"/><ellipse cx="174" cy="112" rx="13" ry="9" fill="#c084fc"/><ellipse cx="65" cy="74" rx="11" ry="7" fill="#fbbf24"/><ellipse cx="110" cy="74" rx="10" ry="7" fill="#fbbf24"/><ellipse cx="155" cy="74" rx="11" ry="7" fill="#fbbf24"/><text x="110" y="157" text-anchor="middle" font-size="14" fill="#fde68a">♥ ♥ ♥</text><rect x="55" y="128" width="6" height="2.5" rx="1.5" fill="#34d399" transform="rotate(30 55 128)"/><rect x="80" y="140" width="6" height="2.5" rx="1.5" fill="#60a5fa" transform="rotate(-20 80 140)"/><rect x="140" y="130" width="6" height="2.5" rx="1.5" fill="#f472b6" transform="rotate(15 140 130)"/><rect x="160" y="148" width="6" height="2.5" rx="1.5" fill="#fbbf24" transform="rotate(-35 160 148)"/><rect x="100" y="135" width="6" height="2.5" rx="1.5" fill="#c084fc" transform="rotate(10 100 135)"/><text x="110" y="98" text-anchor="middle" font-size="11" fill="#fde68a">✦  ✦  ✦</text></g><rect x="106" y="22" width="8" height="24" rx="3" fill="#d1d5db"/></svg></div><div id="dimmer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1;pointer-events:none;transition:opacity .6s"></div><div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap"><button id="btn-dec" class="btn btn-sm" onclick="decorateCake()">🎨 Decorate</button><button id="btn-lit" class="btn btn-sm btn-ghost" onclick="lightCandle()">🔥 Light Candle</button></div><div id="next-cake" style="display:none;animation:fadeUp .5s ease forwards"><button class="btn" onclick="go(4)">Next Surprise →</button></div></div>`;
+  app.appendChild(el);
+  window.decorateCake=()=>{if(decorated)return;decorated=true;el.querySelector('#decos').style.opacity='1';el.querySelector('#t1').setAttribute('fill','#6d28d9');el.querySelector('#t2').setAttribute('fill','#7c3aed');el.querySelector('#t3').setAttribute('fill','#9333ea');el.querySelector('#btn-dec').disabled=true;el.querySelector('#btn-dec').style.opacity='.45';launchConfetti();checkNext();};
+  window.lightCandle=()=>{if(lit)return;lit=true;const f=el.querySelector('#flame');f.style.display='flex';el.querySelector('#dimmer').style.display='block';el.querySelector('#btn-lit').textContent='🕯️ Lit!';el.querySelector('#btn-lit').disabled=true;el.querySelector('#btn-lit').style.opacity='.45';checkNext();};
+  function checkNext(){if(decorated&&lit)el.querySelector('#next-cake').style.display='block';}
+}
+
+function renderBalloons(){
+  const words=['You','are','a','Princess'];
+  const colors=['#e879f9','#c084fc','#f472b6','#a78bfa'];
+  let popped=[false,false,false,false];
+  const el=document.createElement('div');el.className='screen screen-in';el.style.cssText+='gap:0;overflow:hidden';
+  el.innerHTML=`<div style="text-align:center;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center"><div class="stage-badge">Stage 5</div><h2 class="title" style="font-size:24px;margin-bottom:6px">🎈 Pop the Balloons</h2><p class="body-text" style="margin-bottom:28px;font-size:14px">Each one hides a secret word...</p><div id="balloon-row" style="display:flex;justify-content:center;gap:12px;margin-bottom:28px;flex-wrap:nowrap;width:100%"></div><div id="word-reveal" style="min-height:72px;margin-bottom:16px"></div><div id="next-balloon" style="display:none;animation:fadeUp .5s ease forwards"><button class="btn" onclick="go(5)">Next Surprise →</button></div></div>`;
+  app.appendChild(el);
+  const row=el.querySelector('#balloon-row'),reveal=el.querySelector('#word-reveal');
+  words.forEach((w,i)=>{
+    const wrap=document.createElement('div');wrap.style.cssText=`display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;width:68px;flex-shrink:0;position:relative`;wrap.onclick=()=>popBalloon(i,wrap);
+    const body=document.createElement('div');body.id=`balloon-${i}`;body.style.cssText=`width:56px;height:68px;border-radius:50% 50% 46% 46%;background:linear-gradient(145deg,${colors[i]},${colors[i]}bb);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 18px ${colors[i]}55,inset 0 -4px 8px rgba(0,0,0,.2);animation:floatBalloon ${2.5+i*.4}s ${i*.25}s ease-in-out infinite;transition:transform .1s`;
+    const shine=document.createElement('div');shine.style.cssText=`position:absolute;top:8px;left:12px;width:14px;height:18px;background:rgba(255,255,255,.25);border-radius:50%;transform:rotate(-35deg)`;body.appendChild(shine);
+    const q=document.createElement('span');q.style.cssText='font-size:22px;position:relative;z-index:1;color:rgba(255,255,255,.9)';q.textContent='?';body.appendChild(q);
+    const string=document.createElement('div');string.style.cssText=`width:1.5px;height:18px;background:${colors[i]}88;margin:0 auto;border-radius:1px`;
+    const knot=document.createElement('div');knot.style.cssText=`width:7px;height:7px;border-radius:50%;border:1.5px solid ${colors[i]}88;margin:0 auto`;
+    wrap.appendChild(body);wrap.appendChild(string);wrap.appendChild(knot);row.appendChild(wrap);
+  });
+  function popBalloon(i,wrap){
+    if(popped[i])return;popped[i]=true;burstParticles(wrap,colors[i]);
+    const body=el.querySelector(`#balloon-${i}`);body.style.animation='popBurst .35s ease forwards';
+    setTimeout(()=>{body.style.animation='zoomIn .4s cubic-bezier(.34,1.56,.64,1) forwards';body.style.width='58px';body.style.height='58px';body.style.borderRadius='50%';body.style.background=`${colors[i]}22`;body.style.border=`2px dashed ${colors[i]}`;body.style.boxShadow='none';body.style.flexDirection='column';body.style.gap='0';body.innerHTML=`<span style="font-size:13px;font-weight:600;color:${colors[i]};font-family:'DM Sans',sans-serif">${words[i]}</span>`;},380);
+    updateReveal();
+    if(popped.every(Boolean))setTimeout(()=>{el.querySelector('#next-balloon').style.display='block';},600);
+  }
+  function updateReveal(){
+    const sentence=words.filter((_,i)=>popped[i]).join(' ');
+    if(!sentence){reveal.innerHTML='';return;}
+    reveal.innerHTML=`<div class="glass-p" style="padding:14px 24px;border-radius:18px;text-align:center;animation:fadeUp .4s ease forwards"><p style="font-family:'Cormorant Garamond',serif;font-size:21px;font-style:italic;color:#f9a8d4">"${sentence}${popped.every(Boolean)?' 💕':'...'}"</p></div>`;
+  }
+}
+
+/* ─── STAGE 6: Memories — FIXED IMAGE DISPLAY ──────────────────── */
+function renderMemories(){
+  const cards=[
+    {emoji:'🌸', title:'The First Hello',    desc:'That one moment everything changed and the world felt warmer.',    img:'IMAGES/WhatsApp Image 2026-04-21 at 10.51.38 PM.jpeg'},
+    {emoji:'☕', title:'Coffee & Chaos',      desc:'Late mornings, cold coffee, endless warm laughter.',              img:'IMAGES/2.jpeg'},
+    {emoji:'🌙', title:'Midnight Talks',      desc:'When the world was quiet but our words were not.',                img:'IMAGES/3.jpeg'},
+    {emoji:'🎵', title:'Our Playlist',        desc:'Songs that now have your face and feel like memories.',           img:'IMAGES/4.jpeg'},
+    {emoji:'🌟', title:'Every Little Thing',  desc:'The small moments that quietly became the biggest ones.',         img:'IMAGES/5.jpeg'},
+  ];
+  let idx=0;
+
+  const el=document.createElement('div');
+  el.className='screen screen-in';
+  // ── KEY FIX: justify-content flex-start + padding-top so content
+  //    doesn't get squashed, and overflow visible so nothing clips
+  el.style.cssText='gap:0;overflow-y:auto;justify-content:flex-start;padding-top:70px;padding-bottom:30px;';
+
+  el.innerHTML=`
+    <div style="text-align:center;width:100%;max-width:380px;
+                display:flex;flex-direction:column;align-items:center">
+      <div class="stage-badge">Stage 6</div>
+      <h2 class="title" style="font-size:24px;margin-bottom:4px">Some Sweet Moments</h2>
+      <p class="body-text" style="margin-bottom:20px">Swipe through our story</p>
+
+      <!-- ── PHOTO DISPLAY AREA ── -->
+      <div id="mem-photo-area"
+           style="width:100%;display:flex;justify-content:center;
+                  margin-bottom:16px;min-height:200px;align-items:center">
+      </div>
+
+      <!-- nav -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <button id="prev-mem" class="btn btn-ghost"
+                style="width:40px;height:40px;padding:0;border-radius:50%;font-size:22px">‹</button>
+        <div id="mem-dots" class="prog"></div>
+        <button id="next-mem" class="btn btn-ghost"
+                style="width:40px;height:40px;padding:0;border-radius:50%;font-size:22px">›</button>
+      </div>
+
+      <button class="btn" onclick="go(6)">Next Surprise →</button>
+    </div>
+  `;
+  app.appendChild(el);
+
+  const photoArea = el.querySelector('#mem-photo-area');
+  const dots      = el.querySelector('#mem-dots');
+  const prevBtn   = el.querySelector('#prev-mem');
+  const nextBtn   = el.querySelector('#next-mem');
+
+  function buildCard(){
+    const c = cards[idx];
+
+    // ── Build card HTML
+    const card = document.createElement('div');
+    card.className = 'mem-photo-card';
+
+    if(c.img){
+      card.innerHTML=`
+        <img src="${c.img}"
+             alt="${c.title}"
+             onerror="this.parentElement.innerHTML='<div style=\'padding:40px 20px;text-align:center\'><div style=\'font-size:52px;margin-bottom:12px\'>${c.emoji}</div><p style=\'color:#9d87c5;font-size:13px\'>Image not found</p><p style=\'color:#9d87c5;font-size:11px;margin-top:4px;opacity:.6\'>${c.img}</p></div>'"
+        />
+        <div class="mem-photo-caption">
+          <span class="cap-emoji">${c.emoji}</span>
+          <div class="cap-text">
+            <div class="cap-title">${c.title}</div>
+            <div class="cap-desc">${c.desc}</div>
+          </div>
+        </div>`;
+    } else {
+      card.style.padding = '28px 20px';
+      card.innerHTML=`
+        <div style="font-size:52px;margin-bottom:12px;animation:float 2.5s ease-in-out infinite">${c.emoji}</div>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:#e9d5ff;margin-bottom:8px">${c.title}</p>
+        <p style="font-size:13px;color:#9d87c5;line-height:1.6">${c.desc}</p>`;
+    }
+
+    // Slide in the new card
+    photoArea.innerHTML='';
+    photoArea.appendChild(card);
+
+    // Dots
+    dots.innerHTML='';
+    cards.forEach((_,i)=>{
+      const d=document.createElement('div');
+      d.className=`prog-dot ${i===idx?'active':i<idx?'done':'future'}`;
+      dots.appendChild(d);
+    });
+
+    prevBtn.disabled    = idx===0;
+    prevBtn.style.opacity = idx===0?'.3':'1';
+    nextBtn.disabled    = idx===cards.length-1;
+    nextBtn.style.opacity = idx===cards.length-1?'.3':'1';
+  }
+
+  prevBtn.onclick=()=>{if(idx>0){idx--;buildCard();}};
+  nextBtn.onclick=()=>{if(idx<cards.length-1){idx++;buildCard();}};
+  buildCard();
+}
+
+function renderLetter(){
+  let open=false;
+  const el=document.createElement('div');el.className='screen screen-in';el.style.cssText+='gap:0;overflow:hidden';
+  el.innerHTML=`<div style="text-align:center;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center"><div class="stage-badge">Stage 7</div><h2 class="title" style="font-size:24px;margin-bottom:20px">💌 A Letter For You</h2><div id="envelope-wrap"></div><div id="letter-next" style="display:none;animation:fadeUp .5s ease forwards;margin-top:16px"><button class="btn" onclick="go(7)">One Last Surprise →</button></div></div>`;
+  app.appendChild(el);
+  const wrap=el.querySelector('#envelope-wrap');
+  renderEnvelope();
+  function renderEnvelope(){
+    if(!open){
+      wrap.innerHTML=`<div id="env-closed" onclick="openEnv()" style="cursor:pointer;width:220px;height:155px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;animation:pulseGlow 2.5s ease-in-out infinite;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.35);backdrop-filter:blur(20px)"><div style="font-size:52px;animation:bounce 2s ease-in-out infinite">💌</div><p style="color:#c084fc;font-size:13px;letter-spacing:.5px">Tap to unfold...</p></div>`;
+    }else{
+      wrap.innerHTML=`<div style="animation:envelopeUnfold .55s ease forwards"><div class="glass-p" style="border-radius:20px;padding:22px;text-align:left;max-height:310px;overflow-y:auto;width:310px;border:1px solid rgba(192,132,252,.2)"><p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#e879f9;text-align:center;margin-bottom:14px">— With all my heart —</p><p style="font-family:'Cormorant Garamond',serif;font-size:14.5px;line-height:1.95;font-style:italic;color:#f0e6ff;white-space:pre-line">Happy birthday meri jawwwnnn 💋
+This day is veryyyy important for me 🥹 it's very special 🫠
+May Allah give you so much happiness that you've never even imagined, Ameen 🫶🏻🫀
+And always stay happy 🫠🫶🏻
+And enjoy this small surprise from me 😅💗
+I wish I could come to your home and celebrate your birthday right now 🙂
+But one day that will happen too 🫠
+For now, this little surprise is just for you 🫵🏻🌸
+Enjoy ittt meriiii jawnnnn 💋🫂🌸</p></div></div>`;
+      el.querySelector('#letter-next').style.display='block';
+    }
+  }
+  window.openEnv=()=>{open=true;renderEnvelope();};
+}
+
+function renderGift(){
+  let opened=false;
+  const el=document.createElement('div');el.className='screen screen-in';el.style.cssText+='gap:0;overflow:hidden';
+  el.innerHTML=`<div style="text-align:center;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:18px"><h2 class="title" style="font-size:24px">One Last Thing... 🎁</h2><div id="gift-content"></div></div>`;
+  app.appendChild(el);
+  const content=el.querySelector('#gift-content');
+  renderGiftBox();
+  function renderGiftBox(){
+    if(!opened){content.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer" onclick="openGift()"><div style="font-size:90px;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(192,132,252,.5))">🎁</div><p class="body-text" style="font-size:14px">Tap to unwrap...</p></div>`;}
+    else{content.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:18px;animation:zoomIn .6s cubic-bezier(.34,1.56,.64,1) forwards"><div style="font-size:64px">🎉</div><div class="glass-p neon-box" style="border-radius:24px;padding:26px;text-align:center;border:1px solid rgba(192,132,252,.3)"><p style="font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:#f9a8d4;margin-bottom:12px">Lots of love for you 💜</p><p style="font-size:14px;color:#c4b5fd;line-height:1.8;margin-bottom:18px">Wishing you the most magical year yet. May every single day feel as special and wonderful as you truly are.</p><div style="font-size:28px;letter-spacing:7px">🎂 ✨ 🌸 💕 🎈</div></div><p style="font-size:12px;color:rgba(167,139,202,.4);font-style:italic">Made with love, just for you.</p><button class="btn btn-ghost btn-sm" onclick="go(0)" style="margin-top:4px">🔄 Replay Surprise</button></div>`;}
+  }
+  window.openGift=()=>{if(opened)return;opened=true;launchConfetti();setTimeout(launchConfetti,600);renderGiftBox();};
+}
+
+function renderProgress(){
+  let existing=document.getElementById('progress-bar');if(existing)existing.remove();
+  if(stage===0)return;
+  const bar=document.createElement('div');bar.id='progress-bar';
+  bar.style.cssText='position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:5px;align-items:center;background:rgba(6,3,15,.6);backdrop-filter:blur(12px);padding:7px 12px;border-radius:50px;border:1px solid rgba(255,255,255,.06)';
+  for(let i=1;i<=7;i++){const d=document.createElement('div');d.className=`prog-dot ${i===stage?'active':i<stage?'done':'future'}`;bar.appendChild(d);}
+  document.body.appendChild(bar);
+}
+
+function render(){
+  delete window.decorateCake;delete window.lightCandle;delete window.openEnv;delete window.openGift;
+  app.innerHTML='';renderProgress();
+  switch(stage){
+    case 0:renderChat();break;case 1:renderCountdown();break;case 2:renderReveal();break;
+    case 3:renderCake();break;case 4:renderBalloons();break;case 5:renderMemories();break;
+    case 6:renderLetter();break;case 7:renderGift();break;
+  }
+}
+render();
+</script>
+</body>
+</html>
